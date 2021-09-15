@@ -67,55 +67,16 @@
       </el-col>
     </el-row>
     <el-row class="second-row">
-      <el-col :span="24">
+      <el-col :span="24" v-for="item in articleList" :key="item.id">
         <div class="card-info">
           <el-card class="box-card">
             <div class="card-box">
               <div class="image">
-                <img
-                  src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png"
-                  alt=""
-                />
+                <img :src="item.image" alt="item.image" />
               </div>
               <div class="content">
-                <h1>title</h1>
-                <div>content</div>
-              </div>
-            </div>
-          </el-card>
-        </div>
-      </el-col>
-      <el-col :span="24">
-        <div class="card-info">
-          <el-card class="box-card">
-            <div class="card-box">
-              <div class="image">
-                <img
-                  src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png"
-                  alt=""
-                />
-              </div>
-              <div class="content">
-                <h1>title</h1>
-                <div>content</div>
-              </div>
-            </div>
-          </el-card>
-        </div>
-      </el-col>
-      <el-col :span="24">
-        <div class="card-info">
-          <el-card class="box-card">
-            <div class="card-box">
-              <div class="image">
-                <img
-                  src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png"
-                  alt=""
-                />
-              </div>
-              <div class="content">
-                <h1>title</h1>
-                <div>content</div>
+                <h1>{{ item.title }}</h1>
+                <div>{{ item.content }}</div>
               </div>
             </div>
           </el-card>
@@ -128,6 +89,8 @@
 <script lang="ts">
 import { reactive, toRefs } from "vue";
 import CountTo from "../../components/VueCountTo/vue-countTo.vue";
+import { getList } from "../../api/main";
+import _ from "lodash";
 export default {
   components: {
     CountTo,
@@ -135,11 +98,19 @@ export default {
   setup() {
     const state = reactive({
       count: 0,
+      articleList: [],
     });
     const handleSetLineChartData = () => {};
+    const getArticleList = () => {
+      getList().then((res) => {
+        state.articleList = _.get(res, "data.list", []);
+      });
+    };
+    getArticleList();
     return {
       ...toRefs(state),
       handleSetLineChartData,
+      getArticleList,
     };
   },
 };

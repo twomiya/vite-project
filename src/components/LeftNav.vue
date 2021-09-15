@@ -49,7 +49,6 @@ export default {
     };
     const route = useRoute();
     const router = useRouter();
-    console.log("route", router.options.routes);
     return {
       ...toRefs(state),
       handleOpen,
