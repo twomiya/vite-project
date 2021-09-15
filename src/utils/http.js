@@ -11,7 +11,13 @@ const axiosInstance = axios.create({
     return qs.stringify(params, { indices: false });
   },
 });
-function axiosRequest(method = "GET", url, params, data, config) {
+function axiosRequest(
+  method = "GET",
+  url,
+  params,
+  data,
+  config = { headers: {} }
+) {
   const jwtToken = "testToken";
   if (jwtToken) {
     _.set(config, "headers.Authorization", "JWT " + jwtToken);

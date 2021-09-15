@@ -87,7 +87,7 @@
 </template>
 
 <script lang="ts">
-import { reactive, toRefs } from "vue";
+import { reactive, toRefs, onMounted } from "vue";
 import CountTo from "../../components/VueCountTo/vue-countTo.vue";
 import { getList } from "../../api/main";
 import _ from "lodash";
@@ -106,7 +106,9 @@ export default {
         state.articleList = _.get(res, "data.list", []);
       });
     };
-    getArticleList();
+    onMounted(() => {
+      getArticleList();
+    });
     return {
       ...toRefs(state),
       handleSetLineChartData,
