@@ -18,7 +18,7 @@ function axiosRequest(
   data,
   config = { headers: {} }
 ) {
-  const jwtToken = "testToken";
+  const jwtToken = localStorage.getItem("token");
   if (jwtToken) {
     _.set(config, "headers.Authorization", "JWT " + jwtToken);
   }

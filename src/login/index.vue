@@ -3,7 +3,7 @@
     <el-form
       :model="ruleForm"
       :rules="rules"
-      ref="ruleForm"
+      ref="ruleForms"
       label-width="100px"
       class="demo-ruleForm"
     >
@@ -11,7 +11,7 @@
         <el-input v-model="ruleForm.name"></el-input>
       </el-form-item>
       <el-form-item label="用户名" prop="password">
-        <el-input v-model="ruleForm.password"></el-input>
+        <el-input v-model="ruleForm.password" type="password"></el-input>
       </el-form-item>
 
       <el-form-item>
@@ -25,8 +25,9 @@
 </template>
 
 <script>
-import { reactive, toRefs } from "vue";
-
+import { reactive, toRefs, ref, onMounted } from "vue";
+import { login } from "../api/main";
+import { useRouter } from "vue-router";
 export default {
   setup() {
     const state = reactive({
@@ -56,10 +57,23 @@ export default {
         ],
       },
     });
+    const ruleForms = ref();
+    const router = useRouter();
+    onMounted(() => {
+      console.log(ruleForms);
+    });
     const submitForm = (formName) => {
-      this.$refs[formName].validate((valid) => {
+      ruleForms.value.validate((valid) => {
         if (valid) {
-          alert("submit!");
+          const data = {
+            username: state.ruleForm.name,
+            password: state.ruleForm.password,
+          };
+          login(data).then((res) => {
+            localStorage.setItem("token", res.data.data.token);
+            console.log(res.data.data);
+            router.push("/dashboard");
+          });
         } else {
           console.log("error submit!!");
           return false;
@@ -67,11 +81,12 @@ export default {
       });
     };
     const resetForm = (formName) => {
-      this.$refs[formName].resetFields();
+      ruleForms.value.resetFields();
     };
 
     return {
       ...toRefs(state),
+      ruleForms,
       submitForm,
       resetForm,
     };

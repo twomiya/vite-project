@@ -6,6 +6,7 @@ import "element-plus/dist/index.css";
 import "./index.css";
 import router from "./router/index";
 import vuex from "./store/index";
+import "./permission";
 axios.defaults.baseURL = "http://localhost:6060/api/";
 axios.interceptors.request.use((config) => {
   // store.commit('setLoading', true)
