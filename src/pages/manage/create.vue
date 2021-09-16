@@ -3,7 +3,7 @@
     <el-form
       :model="ruleForm"
       :rules="rules"
-      ref="ruleForm"
+      ref="createForm"
       label-width="100px"
       class="demo-ruleForm"
     >
@@ -11,7 +11,12 @@
         <el-input v-model="ruleForm.title"></el-input>
       </el-form-item>
       <el-form-item label="文章内容" prop="content">
-        <tinymce v-model="ruleForm.content" :height="300" />
+        <tinymce
+          v-model="ruleForm.content"
+          :height="300"
+          :value="ruleForm.content"
+          @input="handleChange"
+        />
         <!-- <el-input v-model="ruleForm.content"></el-input> -->
       </el-form-item>
 
@@ -26,8 +31,9 @@
 </template>
 
 <script>
-import { reactive, toRefs } from "vue";
+import { reactive, toRefs, ref } from "vue";
 import Tinymce from "../../components/Tinymce/index.vue";
+import { createArticle } from "../../api/main";
 
 export default {
   components: {
@@ -47,10 +53,22 @@ export default {
         ],
       },
     });
+    const handleChange = (value) => {
+      state.ruleForm.content = value;
+    };
+    const createForm = ref(null);
     const submitForm = (formName) => {
-      this.$refs[formName].validate((valid) => {
+      console.log(state.ruleForm);
+      createForm.value.validate((valid) => {
         if (valid) {
-          alert("submit!");
+          const data = {
+            title: state.ruleForm.title,
+            content: state.ruleForm.content,
+          };
+          console.log(data);
+          createArticle(data).then((res) => {
+            console.log(res);
+          });
         } else {
           console.log("error submit!!");
           return false;
@@ -58,11 +76,13 @@ export default {
       });
     };
     const resetForm = (formName) => {
-      this.$refs[formName].resetFields();
+      createForm.value.resetFields();
     };
 
     return {
       ...toRefs(state),
+      handleChange,
+      createForm,
       submitForm,
       resetForm,
     };

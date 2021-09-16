@@ -4,6 +4,9 @@ export const getList = () => {
 };
 
 export const login = (data) => {
-  console.log(data);
   return request.post("/login", data);
+};
+
+export const createArticle = (data) => {
+  return request.post("/create", data);
 };
